@@ -10,7 +10,6 @@
 //Funcion para rellenar las 2 variables de la sopa de letras
 void rellenar(char sopa[SIZE][SIZE], int sopa_vacia[SIZE][SIZE]){
 
-
     for (int fila = 0; fila < SIZE; fila++)
 	for (int col = 0; col < SIZE; col++){
 	    sopa[fila][col] = (char) (rand() % ('z' - 'a') + 'a');
@@ -97,31 +96,25 @@ void mostrar(char sopa[SIZE][SIZE], char *palabra, int longitud, int direccion, 
 	    printf("%i ", sopa_vacia[fila][col]);
 	printf("\n");
     }
-    printf("Palabra = %s Longitud = %i Direccion = %i\n", palabra, longitud, direccion);
 }
 
 
 int main (int argc, char *argv[]){
 
-    char celdas[SIZE][SIZE];
+    char sopa[SIZE][SIZE];
     int sopa_vacia[SIZE][SIZE];
 
-    char palabra[5];
-    int posicion_fila = 5;
+    char palabra[10];
+    int posicion_fila;
     int posicion_col;
     int direccion;
     int longitud = 0;
+    int suma_fila;
+    int suma_col;
     srand(time(NULL));
 
 
-    printf("Introduzca una palabra: ");
-    scanf(" %s", palabra);
 
-    direccion = rand() % 8;
-    longitud = strlen(palabra);
-    posicion_col = rand() % 10;
-
-    int suma = longitud + posicion_col;
 
 // | posibles maneras de limitar la insercion de la palabra (codigo en revision)
 // v
@@ -129,47 +122,60 @@ int main (int argc, char *argv[]){
     //Rellenamos la sopa
     for (int fila = 0; fila < SIZE; fila++)
 	for (int col = 0; col < SIZE; col++){
-	    celdas[fila][col] = (char) (rand() % ('z' - 'a') + 'a');
+	    sopa[fila][col] = (char) (rand() % ('z' - 'a') + 'a');
 	    sopa_vacia[fila][col] = 0;
 	}
     //Comprobamos que la palabra quepa
-    do{
+   
+   do{
 
-	if (suma <= SIZE){
-	    for (int letra = 0; letra < longitud; letra++, posicion_col++){
-		celdas[posicion_fila][posicion_col] = palabra[letra];
-		sopa_vacia[posicion_fila][posicion_col] = 1;
-	    }
-	}else
-	    posicion_col = rand() % 10;
+       printf("Introduzca una palabra: ");
+       scanf(" %s", palabra);
 
-	}while(suma > SIZE);
-    
-    //mostramos el resultado de la sopa
-    for (int fila = 0; fila < SIZE; fila++){ 
-	for (int col = 0; col < SIZE; col++)
-	    printf("%c ", celdas[fila][col]);
-	printf("\n");
-    }
- 
-    printf("\n");
- 
-    for (int fila = 0; fila < SIZE; fila++){
-	for (int col = 0; col < SIZE; col++)
-	    printf("%i ", sopa_vacia[fila][col]);
-	printf("\n");
-    }
+       direccion = rand() % 8;
+       longitud = strlen(palabra);
+       if (longitud < SIZE){
 
-    printf("\n columna %i", posicion_col);
+	   do{
+
+	       posicion_fila = rand() % 10;
+	       posicion_col = rand() % 10;
+	       suma_fila = longitud + posicion_fila;
+	       suma_col = longitud + posicion_col;
+
+	       if (suma_fila <= SIZE && suma_col <= SIZE){
+		   for (int letra = 0; letra < longitud; letra++, posicion_fila++){
+		       sopa[posicion_fila][posicion_col] = palabra[letra];
+		       sopa_vacia[posicion_fila][posicion_col] = 1;
+		   }
+	       }
+
+	   }while(suma_fila > SIZE || suma_col > SIZE);
+
+       }else
+	   printf("Error la longitud de la palabra es mayor que el tamaño de la sopa, por favor introduzca otra palabra cuya longitud sea menor de 10\n");
+
+   }while(longitud > SIZE);
+
+   for (int filas = 0; filas < SIZE; filas++){ 
+       for (int col = 0; col < SIZE; col++)
+	   printf("%c ", sopa[filas][col]);
+       printf("\n");
+   }
+   printf("\n");
+   for (int fila = 0; fila < SIZE; fila++){
+       for (int col = 0; col < SIZE; col++)
+	   printf("%i ", sopa_vacia[fila][col]);
+       printf("\n");
+
+   }
+   // ^
+   // |  Fin de codigo en revision
+
+   //Con la funcion mostrar vemos el contenido pero todavia no la inserta de manera adeacuada codigo en revision
+   //	mostrar(celdas, palabra, longitud, direccion, posicion_fila, posicion_col);
 
 
-// ^
-// |  Fin de codigo en revision
 
-//Con la funcion mostrar vemos el contenido pero todavia no la inserta de manera adeacuada codigo en revision
-//    mostrar(celdas, palabra, longitud, direccion, posicion_fila, posicion_col);
-
-
-
-	return EXIT_SUCCESS;     
+   return EXIT_SUCCESS;     
 } 
